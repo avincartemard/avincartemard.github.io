@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content_title %}{% endblock %}
+{% block content %}
+{% if articles %}
+    <section id="content" class="body">
+    <ol id="posts-list" class="hfeed" start="{{ articles_paginator.per_page }}">
+    {% for article in articles_page.object_list %}
+	{# First item #}
+	<li><article class="hentry">
+		<header>
+                    <h1><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
+                           title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h1>
+                </header>
+		<div class="entry-content">
+                {% include 'article_infos.html' %}
+                {{ article.summary }}
+                <a class="readmore" href="{{ SITEURL }}/{{ article.url }}">Read more →</a>
+                {% include 'comments.html' %}
+                </div><!-- /.entry-content -->
+            </article></li>
+	{% if loop.last %}
+            {% if loop.last and (articles_page.has_previous()
+            or not articles_page.has_previous() and loop.length > 1) %}
+                {% include 'pagination.html' %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    </ol><!-- /#posts-list -->
+    </section><!-- /#content -->
+{% else %}
+<section id="content" class="body">
+<h2>Pages</h2>
+    {% for page in pages %}
+        <li><a href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
+    {% endfor %}
+</section>
+{% endif %}
+{% endblock content %}
