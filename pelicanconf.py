@@ -6,8 +6,8 @@ sys.setdefaultencoding("utf-8")
 
 LOAD_CONTENT_CACHE = False
 
-SITEURL = ''
-# SITEURL = 'http://avincartemard.github.io'
+
+SITEURL = 'https://avincartemard.github.io/'
 AUTHOR = u'Alexandre Vincart-Emard'
 SITENAME = 'My Blog'
 
