@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Stochastic Optimization</title>
+        <link rel="stylesheet" href="avincartemard.github.io/theme/css/main.css" />
+        <link href="avincartemard.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="My Blog Atom Feed" />
+
+        <!--[if IE]>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="avincartemard.github.io/">alexandre<span class="last-name" style="color:#008db8">vincart-emard</span></a></h1>
+                <nav><ul>
+                    <li><a href="/pages/about.html">About</a></li>
+                    <li><a href="/pages/curriculum-vitae.html">Curriculum Vitae</a></li>
+                    <li><a href="/tags.html">Tags</a></li>
+                    <li><a href="/archives.html">Archives</a></li>
+                </ul>
+                </nav>
+<div id="submenu">
+                    <ul>
+                            <li><a href="avincartemard.github.io/category/blog.html">Blog</a></li>
+                            <li class="active"><a href="avincartemard.github.io/category/machine-learning.html">Machine Learning</a></li>
+                    </ul>
+                <div>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="avincartemard.github.io/blog/2017/07/25/stochastic-optimization/" rel="bookmark"
+           title="Permalink to Stochastic Optimization">Stochastic Optimization</a></h1>
+<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="avincartemard">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <span>July 25, 2017</span>
+<span>| tags: <a href="avincartemard.github.io/tag/optimization.html">Optimization</a><a href="avincartemard.github.io/tag/online-learning.html">Online Learning</a><a href="avincartemard.github.io/tag/big-data.html">Big Data</a><a href="avincartemard.github.io/tag/python.html">Python</a></span>
+</footer><!-- /.post-info -->      <style type="text/css">/*!
+*
+* IPython notebook
+*
+*/
+/* CSS font colors for translated ANSI colors. */
+.ansibold {
+  font-weight: bold;
+}
+/* use dark versions for foreground, to improve visibility */
+.ansiblack {
+  color: black;
+}
+.ansired {
+  color: darkred;
+}
+.ansigreen {
+  color: darkgreen;
+}
+.ansiyellow {
+  color: #c4a000;
+}
+.ansiblue {
+  color: darkblue;
+}
+.ansipurple {
+  color: darkviolet;
+}
+.ansicyan {
+  color: steelblue;
+}
+.ansigray {
+  color: gray;
+}
+/* and light for background, for the same reason */
+.ansibgblack {
+  background-color: black;
+}
+.ansibgred {
+  background-color: red;
+}
+.ansibggreen {
+  background-color: green;
+}
+.ansibgyellow {
+  background-color: yellow;
+}
+.ansibgblue {
+  background-color: blue;
+}
+.ansibgpurple {
+  background-color: magenta;
+}
+.ansibgcyan {
+  background-color: cyan;
+}
+.ansibggray {
+  background-color: gray;
+}
+div.cell {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  width: 100%;
+  padding: 5px;
+  /* This acts as a spacer between cells, that is outside the border */
+  margin: 0px;
+  outline: none;
+  border-left-width: 1px;
+  padding-left: 5px;
+  background: linear-gradient(to right, transparent -40px, transparent 1px, transparent 1px, transparent 100%);
+}
+div.cell.jupyter-soft-selected {
+  border-left-color: #90CAF9;
+  border-left-color: #E3F2FD;
+  border-left-width: 1px;
+  padding-left: 5px;
+  border-right-color: #E3F2FD;
+  border-right-width: 1px;
+  background: #E3F2FD;
+}
+@media print {
+  div.cell.jupyter-soft-selected {
+    border-color: transparent;
+  }
+}
+div.cell.selected {
+  border-color: #ababab;
+  border-left-width: 0px;
+  padding-left: 6px;
+  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 5px, transparent 5px, transparent 100%);
+}
+@media print {
+  div.cell.selected {
+    border-color: transparent;
+  }
+}
+div.cell.selected.jupyter-soft-selected {
+  border-left-width: 0;
+  padding-left: 6px;
+  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 7px, #E3F2FD 7px, #E3F2FD 100%);
+}
+.edit_mode div.cell.selected {
+  border-color: #66BB6A;
+  border-left-width: 0px;
+  padding-left: 6px;
+  background: linear-gradient(to right, #66BB6A -40px, #66BB6A 5px, transparent 5px, transparent 100%);
+}
+@media print {
+  .edit_mode div.cell.selected {
+    border-color: transparent;
+  }
+}
+.prompt {
+  /* This needs to be wide enough for 3 digit prompt numbers: In[100]: */
+  min-width: 14ex;
+  /* This padding is tuned to match the padding on the CodeMirror editor. */
+  padding: 0.4em;
+  margin: 0px;
+  font-family: monospace;
+  text-align: right;
+  /* This has to match that of the the CodeMirror class line-height below */
+  line-height: 1.21429em;
+  /* Don't highlight prompt number selection */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Use default cursor */
+  cursor: default;
+}
+@media (max-width: 540px) {
+  .prompt {
+    text-align: left;
+  }
+}
+div.inner_cell {
+  min-width: 0;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* Old browsers */
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  /* Modern browsers */
+  flex: 1;
+}
+/* input_area and input_prompt must match in top border and margin for alignment */
+div.input_area {
+  border: 1px solid #cfcfcf;
+  border-radius: 2px;
+  background: #f7f7f7;
+  line-height: 1.21429em;
+}
+/* This is needed so that empty prompt areas can collapse to zero height when there
+   is no content in the output_subarea and the prompt. The main purpose of this is
+   to make sure that empty JavaScript output_subareas have no height. */
+div.prompt:empty {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+div.unrecognized_cell {
+  padding: 5px 5px 5px 0px;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+div.unrecognized_cell .inner_cell {
+  border-radius: 2px;
+  padding: 5px;
+  font-weight: bold;
+  color: red;
+  border: 1px solid #cfcfcf;
+  background: #eaeaea;
+}
+div.unrecognized_cell .inner_cell a {
+  color: inherit;
+  text-decoration: none;
+}
+div.unrecognized_cell .inner_cell a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+@media (max-width: 540px) {
+  div.unrecognized_cell > div.prompt {
+    display: none;
+  }
+}
+div.code_cell {
+  /* avoid page breaking on code cells when printing */
+}
+@media print {
+  div.code_cell {
+    page-break-inside: avoid;
+  }
+}
+/* any special styling for code cells that are currently running goes here */
+div.input {
+  page-break-inside: avoid;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.input {
+    /* Old browsers */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-align: stretch;
+    display: box;
+    box-orient: vertical;
+    box-align: stretch;
+    /* Modern browsers */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+/* input_area and input_prompt must match in top border and margin for alignment */
+div.input_prompt {
+  color: #303F9F;
+  border-top: 1px solid transparent;
+}
+div.input_area > div.highlight {
+  margin: 0.4em;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+div.input_area > div.highlight > pre {
+  margin: 0px;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+/* The following gets added to the <head> if it is detected that the user has a
+ * monospace font with inconsistent normal/bold/italic height.  See
+ * notebookmain.js.  Such fonts will have keywords vertically offset with
+ * respect to the rest of the text.  The user should select a better font.
+ * See: https://github.com/ipython/ipython/issues/1503
+ *
+ * .CodeMirror span {
+ *      vertical-align: bottom;
+ * }
+ */
+.CodeMirror {
+  line-height: 1.21429em;
+  /* Changed from 1em to our global default */
+  font-size: 14px;
+  height: auto;
+  /* Changed to auto to autogrow */
+  background: none;
+  /* Changed from white to allow our bg to show through */
+}
+.CodeMirror-scroll {
+  /*  The CodeMirror docs are a bit fuzzy on if overflow-y should be hidden or visible.*/
+  /*  We have found that if it is visible, vertical scrollbars appear with font size changes.*/
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.CodeMirror-lines {
+  /* In CM2, this used to be 0.4em, but in CM3 it went to 4px. We need the em value because */
+  /* we have set a different line-height and want this to scale with that. */
+  padding: 0.4em;
+}
+.CodeMirror-linenumber {
+  padding: 0 8px 0 4px;
+}
+.CodeMirror-gutters {
+  border-bottom-left-radius: 2px;
+  border-top-left-radius: 2px;
+}
+.CodeMirror pre {
+  /* In CM3 this went to 4px from 0 in CM2. We need the 0 value because of how we size */
+  /* .CodeMirror-lines */
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+/*
+
+Original style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiacs.Org>
+Adapted from GitHub theme
+
+*/
+.highlight-base {
+  color: #000;
+}
+.highlight-variable {
+  color: #000;
+}
+.highlight-variable-2 {
+  color: #1a1a1a;
+}
+.highlight-variable-3 {
+  color: #333333;
+}
+.highlight-string {
+  color: #BA2121;
+}
+.highlight-comment {
+  color: #408080;
+  font-style: italic;
+}
+.highlight-number {
+  color: #080;
+}
+.highlight-atom {
+  color: #88F;
+}
+.highlight-keyword {
+  color: #008000;
+  font-weight: bold;
+}
+.highlight-builtin {
+  color: #008000;
+}
+.highlight-error {
+  color: #f00;
+}
+.highlight-operator {
+  color: #AA22FF;
+  font-weight: bold;
+}
+.highlight-meta {
+  color: #AA22FF;
+}
+/* previously not defined, copying from default codemirror */
+.highlight-def {
+  color: #00f;
+}
+.highlight-string-2 {
+  color: #f50;
+}
+.highlight-qualifier {
+  color: #555;
+}
+.highlight-bracket {
+  color: #997;
+}
+.highlight-tag {
+  color: #170;
+}
+.highlight-attribute {
+  color: #00c;
+}
+.highlight-header {
+  color: blue;
+}
+.highlight-quote {
+  color: #090;
+}
+.highlight-link {
+  color: #00c;
+}
+/* apply the same style to codemirror */
+.cm-s-ipython span.cm-keyword {
+  color: #008000;
+  font-weight: bold;
+}
+.cm-s-ipython span.cm-atom {
+  color: #88F;
+}
+.cm-s-ipython span.cm-number {
+  color: #080;
+}
+.cm-s-ipython span.cm-def {
+  color: #00f;
+}
+.cm-s-ipython span.cm-variable {
+  color: #000;
+}
+.cm-s-ipython span.cm-operator {
+  color: #AA22FF;
+  font-weight: bold;
+}
+.cm-s-ipython span.cm-variable-2 {
+  color: #1a1a1a;
+}
+.cm-s-ipython span.cm-variable-3 {
+  color: #333333;
+}
+.cm-s-ipython span.cm-comment {
+  color: #408080;
+  font-style: italic;
+}
+.cm-s-ipython span.cm-string {
+  color: #BA2121;
+}
+.cm-s-ipython span.cm-string-2 {
+  color: #f50;
+}
+.cm-s-ipython span.cm-meta {
+  color: #AA22FF;
+}
+.cm-s-ipython span.cm-qualifier {
+  color: #555;
+}
+.cm-s-ipython span.cm-builtin {
+  color: #008000;
+}
+.cm-s-ipython span.cm-bracket {
+  color: #997;
+}
+.cm-s-ipython span.cm-tag {
+  color: #170;
+}
+.cm-s-ipython span.cm-attribute {
+  color: #00c;
+}
+.cm-s-ipython span.cm-header {
+  color: blue;
+}
+.cm-s-ipython span.cm-quote {
+  color: #090;
+}
+.cm-s-ipython span.cm-link {
+  color: #00c;
+}
+.cm-s-ipython span.cm-error {
+  color: #f00;
+}
+.cm-s-ipython span.cm-tab {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=);
+  background-position: right;
+  background-repeat: no-repeat;
+}
+div.output_wrapper {
+  /* this position must be relative to enable descendents to be absolute within it */
+  position: relative;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  z-index: 1;
+}
+/* class for the output area when it should be height-limited */
+div.output_scroll {
+  /* ideally, this would be max-height, but FF barfs all over that */
+  height: 24em;
+  /* FF needs this *and the wrapper* to specify full width, or it will shrinkwrap */
+  width: 100%;
+  overflow: auto;
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+  display: block;
+}
+/* output div while it is collapsed */
+div.output_collapsed {
+  margin: 0px;
+  padding: 0px;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+div.out_prompt_overlay {
+  height: 100%;
+  padding: 0px 0.4em;
+  position: absolute;
+  border-radius: 2px;
+}
+div.out_prompt_overlay:hover {
+  /* use inner shadow to get border that is computed the same on WebKit/FF */
+  -webkit-box-shadow: inset 0 0 1px #000;
+  box-shadow: inset 0 0 1px #000;
+  background: rgba(240, 240, 240, 0.5);
+}
+div.output_prompt {
+  color: #D84315;
+}
+/* This class is the outer container of all output sections. */
+div.output_area {
+  padding: 0px;
+  page-break-inside: avoid;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+div.output_area .MathJax_Display {
+  text-align: left !important;
+}
+div.output_area 
+div.output_area 
+div.output_area img,
+div.output_area svg {
+  max-width: 100%;
+  height: auto;
+}
+div.output_area img.unconfined,
+div.output_area svg.unconfined {
+  max-width: none;
+}
+/* This is needed to protect the pre formating from global settings such
+   as that of bootstrap */
+.output {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.output_area {
+    /* Old browsers */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-align: stretch;
+    display: box;
+    box-orient: vertical;
+    box-align: stretch;
+    /* Modern browsers */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+div.output_area pre {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  color: black;
+  background-color: transparent;
+  border-radius: 0;
+}
+/* This class is for the output subarea inside the output_area and after
+   the prompt div. */
+div.output_subarea {
+  overflow-x: auto;
+  padding: 0.4em;
+  /* Old browsers */
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  /* Modern browsers */
+  flex: 1;
+  max-width: calc(100% - 14ex);
+}
+div.output_scroll div.output_subarea {
+  overflow-x: visible;
+}
+/* The rest of the output_* classes are for special styling of the different
+   output types */
+/* all text output has this class: */
+div.output_text {
+  text-align: left;
+  color: #000;
+  /* This has to match that of the the CodeMirror class line-height below */
+  line-height: 1.21429em;
+}
+/* stdout/stderr are 'text' as well as 'stream', but execute_result/error are *not* streams */
+div.output_stderr {
+  background: #fdd;
+  /* very light red background for stderr */
+}
+div.output_latex {
+  text-align: left;
+}
+/* Empty output_javascript divs should have no height */
+div.output_javascript:empty {
+  padding: 0;
+}
+.js-error {
+  color: darkred;
+}
+/* raw_input styles */
+div.raw_input_container {
+  line-height: 1.21429em;
+  padding-top: 5px;
+}
+pre.raw_input_prompt {
+  /* nothing needed here. */
+}
+input.raw_input {
+  font-family: monospace;
+  font-size: inherit;
+  color: inherit;
+  width: auto;
+  /* make sure input baseline aligns with prompt */
+  vertical-align: baseline;
+  /* padding + margin = 0.5em between prompt and cursor */
+  padding: 0em 0.25em;
+  margin: 0em 0.25em;
+}
+input.raw_input:focus {
+  box-shadow: none;
+}
+p.p-space {
+  margin-bottom: 10px;
+}
+div.output_unrecognized {
+  padding: 5px;
+  font-weight: bold;
+  color: red;
+}
+div.output_unrecognized a {
+  color: inherit;
+  text-decoration: none;
+}
+div.output_unrecognized a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.rendered_html {
+  color: #000;
+  /* any extras will just be numbers: */
+}
+
+
+
+.rendered_html :link {
+  text-decoration: underline;
+}
+.rendered_html :visited {
+  text-decoration: underline;
+}
+
+
+
+
+
+
+.rendered_html h1:first-child {
+  margin-top: 0.538em;
+}
+.rendered_html h2:first-child {
+  margin-top: 0.636em;
+}
+.rendered_html h3:first-child {
+  margin-top: 0.777em;
+}
+.rendered_html h4:first-child {
+  margin-top: 1em;
+}
+.rendered_html h5:first-child {
+  margin-top: 1em;
+}
+.rendered_html h6:first-child {
+  margin-top: 1em;
+}
+
+
+
+
+
+
+
+
+.rendered_html * + ul {
+  margin-top: 1em;
+}
+.rendered_html * + ol {
+  margin-top: 1em;
+}
+
+
+.rendered_html pre,
+
+
+
+.rendered_html tr,
+.rendered_html th,
+
+.rendered_html td,
+
+
+.rendered_html * + table {
+  margin-top: 1em;
+}
+
+.rendered_html * + p {
+  margin-top: 1em;
+}
+
+.rendered_html * + img {
+  margin-top: 1em;
+}
+.rendered_html img,
+
+.rendered_html img.unconfined,
+
+div.text_cell {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.text_cell > div.prompt {
+    display: none;
+  }
+}
+div.text_cell_render {
+  /*font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;*/
+  outline: none;
+  resize: none;
+  width: inherit;
+  border-style: none;
+  padding: 0.5em 0.5em 0.5em 0.4em;
+  color: #000;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+a.anchor-link:link {
+  text-decoration: none;
+  padding: 0px 20px;
+  visibility: hidden;
+}
+h1:hover .anchor-link,
+h2:hover .anchor-link,
+h3:hover .anchor-link,
+h4:hover .anchor-link,
+h5:hover .anchor-link,
+h6:hover .anchor-link {
+  visibility: visible;
+}
+.text_cell.rendered .input_area {
+  display: none;
+}
+.text_cell.rendered 
+.text_cell.unrendered .text_cell_render {
+  display: none;
+}
+.cm-header-1,
+.cm-header-2,
+.cm-header-3,
+.cm-header-4,
+.cm-header-5,
+.cm-header-6 {
+  font-weight: bold;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.cm-header-1 {
+  font-size: 185.7%;
+}
+.cm-header-2 {
+  font-size: 157.1%;
+}
+.cm-header-3 {
+  font-size: 128.6%;
+}
+.cm-header-4 {
+  font-size: 110%;
+}
+.cm-header-5 {
+  font-size: 100%;
+  font-style: italic;
+}
+.cm-header-6 {
+  font-size: 100%;
+  font-style: italic;
+}
+</style>
+<style type="text/css">.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+<style type="text/css">
+/* Temporary definitions which will become obsolete with Notebook release 5.0 */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In a world where data can be collected continuously and storage costs are cheap, issues related to the growing size of interesting datasets can pose a problem unless we have the right tools for the task. Indeed, in the event where we have <em>streaming data</em> it might be impossible to wait until the "end" before fitting our model since it may never come. Alternatively it might be problematic to even store all of the data, scattered across many different servers, in memory before using it. Instead it would be preferable to do an update each time some new data (or a small batch of it) arrives. Similarly we might find ourselves in an offline situation where the number of training examples is <em>very large</em> and traditional approaches, such as gradient descent, start to become too slow for our needs.</p>
+<p><strong>Stochastic gradient descent</strong> (SGD) offers an easy solution to all of these problems.</p>
+<p>In this post we explore the convergence properties of stochastic gradient descent and a few of its variants, namely</p>
+<ul>
+<li>Polyak-Ruppert averaged stochastic gradient;</li>
+<li>Adaptive Gradient, also known as AdaGrad;</li>
+<li>Stochastic Average Gradient, also known as SAG.</li>
+</ul>
+<p> </p>
+<h2 id="Stochastic-Gradient-Descent-for-Logistic-Regression">Stochastic Gradient Descent for Logistic Regression<a class="anchor-link" href="#Stochastic-Gradient-Descent-for-Logistic-Regression">Â¶</a></h2><p>In this post we will consider the classification dataset <a href="avincartemard.github.io/datasets/quantum.mat"><code>quantum.mat</code></a> that I used during an assignment for the course CPSC 540 - Machine Learning at UBC. It contains a matrix $X$ with dimensions $50000 \times 79$, as well as a vector $y$ taking values $\pm 1$, which we will classify using logistic regression. The true minimum of our model's cost function lies at $f(w) = 2.7068 \times 10^4$, but various implementations of SGD have drastically different performances as we will see.</p>
+<p>The cost function for logistic regression with L2-regularization can be written in a form well-suited to our minimization objective:</p>
+\begin{equation}
+f(w) = \sum_{i=1}^n f_i(w), \;\;\;\;\; \text{with} \;\; f_i(w) = \log \Big( 1 + \exp \left( - y_i X_{ia} w_a \right) \Big) + \frac{\lambda}{2 n} w^2.
+\end{equation}<p>The key idea behind SGD is to approximate the true gradient $\nabla f(w)$ by the successive gradients at individual training examples $\nabla f_i(w)$, which naturally befits online learning. The rationale for doing so is that it is very costly to compute the exact direction of the gradient, whereas a good but noisy estimate can be obtained by looking at a few examples only. This noise has the added benefit of preventing SGD from getting stuck in the shallow local minima that might be present for non-convex optimization objectives (such as neural networks), at the cost of never truly converging to a minimum but rather in a neighborhood around it.</p>
+<p>We now proceed to build a <code>LogisticRegressionSGD()</code> class that implements the logistic regression cost function written above. We will then include different stochastic optimization methods and see how close they can get to the true minimum after 10 epochs.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [1]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.io</span> <span class="k">import</span> <span class="n">loadmat</span>
+
+<span class="c1"># load data from MATLAB file</span>
+<span class="n">datamat</span> <span class="o">=</span> <span class="n">loadmat</span><span class="p">(</span><span class="s1">'quantum.mat'</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">datamat</span><span class="p">[</span><span class="s1">'X'</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">datamat</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [2]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">LogisticRegressionSGD</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">progTol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">nEpochs</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+        <span class="c1"># define convergence parameters here so all methods can use them</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progTol</span> <span class="o">=</span> <span class="n">progTol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nEpochs</span> <span class="o">=</span> <span class="n">nEpochs</span>
+        
+    <span class="k">def</span> <span class="nf">LogReg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">Lambda</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">""" Logistic regression cost function with L2-regularization """</span>
+        <span class="sd">""" Outputs negative log-likelihood (nll) and gradient (grad) """</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">):</span>   <span class="c1"># for individual training examples</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[[</span><span class="n">i</span><span class="p">],</span> <span class="p">:]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+            
+        <span class="n">yXw</span> <span class="o">=</span> <span class="n">y</span><span class="o">*</span><span class="n">X</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">sigmoid</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">yXw</span><span class="p">))</span>
+        
+        <span class="n">nll</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sigmoid</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Lambda</span><span class="o">*</span><span class="n">w</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">grad</span> <span class="o">=</span> <span class="o">-</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">sigmoid</span><span class="p">))</span> <span class="o">+</span> <span class="n">Lambda</span><span class="o">*</span><span class="n">w</span>
+        
+        <span class="k">return</span> <span class="n">nll</span><span class="p">,</span> <span class="n">grad</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Regular-Stochastic-Gradient-Descent">Regular Stochastic Gradient Descent<a class="anchor-link" href="#Regular-Stochastic-Gradient-Descent">Â¶</a></h3><p>Schematically the standard SGD algorithm takes the form</p>
+<ol>
+<li><p>Initialize weights $w$ and learning rate $\eta_t$.</p>
+</li>
+<li><ul>
+<li><p>Randomly permute training examples.</p>
+</li>
+<li><p>For $i = 1 : n$ do $w \leftarrow w - \eta_t \nabla f_i(w)$.</p>
+</li>
+</ul>
+</li>
+<li><p>Repeat step 2 until convergence.</p>
+</li>
+</ol>
+<p>Many theory papers use the step size $\eta_t = 1/\lambda t$, which offers the best convergence rate in the worst case scenario. However choosing this learning rate typically leads the SGD algorithm in regions of parameter space afflicted by numerical overflow of the cost function before it ultimately "converges" to $f(w) \geq 4.5 \times 10^4$, far away from the global minimum.</p>
+<p>Alternatives include choosing a constant learning rate (we found that $\eta = 10^{-4}$ gave reasonable results) or an iteration-dependent rate that slowly converges to 0, such as</p>
+\begin{equation}
+\eta_t = \frac{\sqrt{n}}{\sqrt{n} + t}.
+\end{equation}<p>We find that the last two approaches yield similar results, although the latter requires the fine-tuning of both the numerator and denominator in order to work optimally, and also makes it hard to decide when to stop since later iterations move very slowly.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [3]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">RegularSGD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">case</span><span class="p">):</span>
+    <span class="c1"># Initialize</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">w_old</span> <span class="o">=</span> <span class="n">w</span>
+    <span class="n">Lambda</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="c1"># Randomly shuffle training data</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="c1"># shuffles arr directly</span>
+        
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nEpochs</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># Compute nll and grad for one random training example</span>
+        <span class="n">nll</span><span class="p">,</span> <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LogReg</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">Lambda</span><span class="o">=</span><span class="n">Lambda</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="n">arr</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">case</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">eta</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">Lambda</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">case</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+            <span class="n">eta</span> <span class="o">=</span> <span class="mf">1e-4</span>
+        <span class="k">elif</span> <span class="n">case</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+            <span class="n">eta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">t</span><span class="p">)</span>   <span class="c1"># step size</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"The variable 'case' is not specified correctly; abort."</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">-</span> <span class="n">eta</span><span class="o">*</span><span class="n">grad</span>   <span class="c1"># gradient step</span>
+            
+        <span class="c1"># One epoch has passed: check for convergence</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="o">-</span><span class="n">w_old</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'Passes = </span><span class="si">%d</span><span class="s1">, function = </span><span class="si">%e</span><span class="s1">, change = </span><span class="si">%f</span><span class="s1">'</span> <span class="o">%</span><span class="p">((</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LogReg</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">Lambda</span><span class="o">=</span><span class="n">Lambda</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">change</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">change</span> <span class="o"><</span> <span class="bp">self</span><span class="o">.</span><span class="n">progTol</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">'Parameters changed b less than progress tolerance on pass'</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>   <span class="c1"># reshuffle</span>
+            <span class="n">w_old</span> <span class="o">=</span> <span class="n">w</span>
+            
+<span class="c1"># Add method to our class</span>
+<span class="n">LogisticRegressionSGD</span><span class="o">.</span><span class="n">RegularSGD</span> <span class="o">=</span> <span class="n">RegularSGD</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [4]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'---------------------------------------------'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  Case 1: best rate for worst case scenario  '</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'---------------------------------------------'</span><span class="p">)</span>
+<span class="n">LogisticRegressionSGD</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">RegularSGD</span><span class="p">(</span><span class="n">case</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'---------------------------------------------'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  Case 2: small and constant step size       '</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'---------------------------------------------'</span><span class="p">)</span>
+<span class="n">LogisticRegressionSGD</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">RegularSGD</span><span class="p">(</span><span class="n">case</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'---------------------------------------------'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  Case 3: monotonously decreasing step size  '</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'---------------------------------------------'</span><span class="p">)</span>
+<span class="n">LogisticRegressionSGD</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">RegularSGD</span><span class="p">(</span><span class="n">case</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>---------------------------------------------
+  Case 1: best rate for worst case scenario  
+---------------------------------------------
+Passes = 1, function = 6.497187e+04, change = 4.257697
+Passes = 2, function = 6.332083e+04, change = 0.071927
+Passes = 3, function = 6.241682e+04, change = 0.041528
+Passes = 4, function = 6.179935e+04, change = 0.029383
+Passes = 5, function = 6.133539e+04, change = 0.022594
+Passes = 6, function = 6.096411e+04, change = 0.018459
+Passes = 7, function = 6.065550e+04, change = 0.015570
+Passes = 8, function = 6.039239e+04, change = 0.013437
+Passes = 9, function = 6.016341e+04, change = 0.011837
+Passes = 10, function = 5.996084e+04, change = 0.010564
+---------------------------------------------
+  Case 2: small and constant step size       
+---------------------------------------------
+Passes = 1, function = 2.827318e+04, change = 0.428875
+Passes = 2, function = 2.767742e+04, change = 0.148022
+Passes = 3, function = 2.744054e+04, change = 0.082473
+Passes = 4, function = 2.731625e+04, change = 0.055343
+Passes = 5, function = 2.723884e+04, change = 0.045643
+Passes = 6, function = 2.719352e+04, change = 0.038638
+Passes = 7, function = 2.715925e+04, change = 0.037987
+Passes = 8, function = 2.713423e+04, change = 0.027871
+Passes = 9, function = 2.711764e+04, change = 0.023492
+Passes = 10, function = 2.710850e+04, change = 0.024259
+---------------------------------------------
+  Case 3: monotonously decreasing step size  
+---------------------------------------------
+Passes = 1, function = 2.775579e+04, change = 0.995766
+Passes = 2, function = 2.726339e+04, change = 0.156621
+Passes = 3, function = 2.729197e+04, change = 0.070505
+Passes = 4, function = 2.724176e+04, change = 0.077701
+Passes = 5, function = 2.723945e+04, change = 0.052928
+Passes = 6, function = 2.718166e+04, change = 0.051606
+Passes = 7, function = 2.711573e+04, change = 0.032869
+Passes = 8, function = 2.713621e+04, change = 0.056568
+Passes = 9, function = 2.715035e+04, change = 0.042247
+Passes = 10, function = 2.709499e+04, change = 0.034909
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Polyak-Ruppert-Averaged-Stochastic-Gradient">Polyak-Ruppert Averaged Stochastic Gradient<a class="anchor-link" href="#Polyak-Ruppert-Averaged-Stochastic-Gradient">Â¶</a></h3><p>Rather than use the information contained in the weights $w$ at iteration $t$ to determine the descent direction, it is often an improvement to use a <em>running average</em> instead, which keeps a memory of previous iterations</p>
+\begin{equation}
+\overline{w}_t = \overline{w}_{t-1} - \frac{1}{t} \left( \overline{w}_{t-1} - w_t \right).
+\end{equation}<p>Doing so results in a slight improvement over regular SGD. Note that convergence improves if we start averaging after <code>nAvg</code> $\geq 2$ passes in order to smooth out the initial irregularities.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [5]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">AverageSGD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nAvg</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="c1"># Initialize</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">w_old</span> <span class="o">=</span> <span class="n">w</span>
+    <span class="n">w_avg</span> <span class="o">=</span> <span class="n">w</span>   <span class="c1"># averaged weights</span>
+    <span class="n">Lambda</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">nPasses</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1"># Randomly shuffle training data</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="c1"># shuffles arr directly</span>
+        
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nEpochs</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># Compute nll and grad for one random training example</span>
+        <span class="n">nll</span><span class="p">,</span> <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LogReg</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">Lambda</span><span class="o">=</span><span class="n">Lambda</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="n">arr</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">)])</span>
+        <span class="n">eta</span> <span class="o">=</span> <span class="mf">1e-4</span>   <span class="c1"># step size</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">-</span> <span class="n">eta</span><span class="o">*</span><span class="n">grad</span>   <span class="c1"># gradient step</span>
+            
+        <span class="k">if</span> <span class="n">nPasses</span> <span class="o">>=</span> <span class="n">nAvg</span><span class="p">:</span>
+            <span class="n">w_avg</span> <span class="o">=</span> <span class="n">w_avg</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="n">nAvg</span><span class="o">*</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">w_avg</span> <span class="o">-</span> <span class="n">w</span><span class="p">)</span>
+            
+        <span class="c1"># One epoch has passed: check for convergence</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">nPasses</span> <span class="o">=</span> <span class="n">nPasses</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="o">-</span><span class="n">w_old</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'Passes = </span><span class="si">%d</span><span class="s1">, function = </span><span class="si">%e</span><span class="s1">, change = </span><span class="si">%f</span><span class="s1">'</span> <span class="o">%</span><span class="p">((</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LogReg</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">Lambda</span><span class="o">=</span><span class="n">Lambda</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">change</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">change</span> <span class="o"><</span> <span class="bp">self</span><span class="o">.</span><span class="n">progTol</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">'Parameters changed b less than progress tolerance on pass'</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>   <span class="c1"># reshuffle</span>
+            <span class="n">w_old</span> <span class="o">=</span> <span class="n">w</span>
+            
+<span class="n">LogisticRegressionSGD</span><span class="o">.</span><span class="n">AverageSGD</span> <span class="o">=</span> <span class="n">AverageSGD</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [6]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">LogisticRegressionSGD</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">AverageSGD</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Passes = 1, function = 2.826491e+04, change = 0.430516
+Passes = 2, function = 2.767581e+04, change = 0.146381
+Passes = 3, function = 2.744244e+04, change = 0.078595
+Passes = 4, function = 2.731937e+04, change = 0.058312
+Passes = 5, function = 2.724000e+04, change = 0.045239
+Passes = 6, function = 2.719524e+04, change = 0.039755
+Passes = 7, function = 2.715876e+04, change = 0.033641
+Passes = 8, function = 2.713543e+04, change = 0.025909
+Passes = 9, function = 2.711776e+04, change = 0.021958
+Passes = 10, function = 2.710598e+04, change = 0.020059
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Adaptive-Gradient-(AdaGrad)">Adaptive Gradient (AdaGrad)<a class="anchor-link" href="#Adaptive-Gradient-(AdaGrad)">Â¶</a></h3><p>One of the main drawbacks of the stochastic optimization methods outlined above is the need to manually choose the optimal learning rate for the problem at hand. <a href="http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf">AdaGrad</a>, an algorithm proposed in 2011, eschews this problem by computing an appropriate learning rate for each direction $\hat{w_a} \in \mathbb{R}^d$.</p>
+<p>AdaGrad automatically assigns a higher learning rate to rare/sparse features, which typically have a higher predictive power than common ones. We can understand this intuitively by thinking about <em>words</em> in a story: rare words like <em>Daenerys</em> and <em>dragons</em> provide significantly more information and context for the audience of Game of Thrones than common ones such as <em>the</em> or <em>a</em>. Therefore AdaGrad ensures that the most predictive features have larger updates (i.e. the associated weights increase/decrease proportionally to their importance) than the ones providing irrelevant information.</p>
+<p>The weight update for AdaGrad is given by</p>
+\begin{equation}
+w_{t+1} = w_t - \eta_t D_t \nabla f(w_t),
+\end{equation}<p>where the diagonal matrix $D_t$ has elements</p>
+\begin{equation}
+(D_t)_{jj} = \frac{1}{\sqrt{\delta + \sum_{k=0}^t \nabla_j f_{i_k}(w_k)^2}}.
+\end{equation}<p>Here $i_k$ denotes example $i$ chosen randomly on iteration $k$, $\nabla_j$ is the $j$th element of the gradient, and $\delta$ is a small number to prevent division by 0. All we need to do is fiddle with the constant learning rate $\eta_t = \eta$ since $D_t$ automatically takes care of assigning higher importance to sparse features.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [7]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">AdaGrad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eta</span> <span class="o">=</span> <span class="mf">0.025</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">):</span>
+    <span class="c1"># Initialize</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">w_old</span> <span class="o">=</span> <span class="n">w</span>
+    <span class="n">Lambda</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="c1"># keep sum of squared gradients in memory</span>
+    <span class="n">sumGrad_sq</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1"># Randomly shuffle training data</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="c1"># shuffles arr directly</span>
+    
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nEpochs</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># Compute nll and grad for one random training example</span>
+        <span class="n">nll</span><span class="p">,</span> <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LogReg</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">Lambda</span><span class="o">=</span><span class="n">Lambda</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="n">arr</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">)])</span>
+        <span class="n">sumGrad_sq</span> <span class="o">=</span> <span class="n">sumGrad_sq</span> <span class="o">+</span> <span class="n">grad</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span> <span class="o">+</span> <span class="n">sumGrad_sq</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">-</span> <span class="n">eta</span><span class="o">*</span><span class="n">D</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span>   <span class="c1"># gradient step</span>
+            
+        <span class="c1"># One epoch has passed: check for convergence</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="o">-</span><span class="n">w_old</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'Passes = </span><span class="si">%d</span><span class="s1">, function = </span><span class="si">%e</span><span class="s1">, change = </span><span class="si">%f</span><span class="s1">'</span> <span class="o">%</span><span class="p">((</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LogReg</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">Lambda</span><span class="o">=</span><span class="n">Lambda</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">change</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">change</span> <span class="o"><</span> <span class="bp">self</span><span class="o">.</span><span class="n">progTol</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">'Parameters changed b less than progress tolerance on pass'</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>   <span class="c1"># reshuffle</span>
+            <span class="n">w_old</span> <span class="o">=</span> <span class="n">w</span>
+            
+<span class="n">LogisticRegressionSGD</span><span class="o">.</span><span class="n">AdaGrad</span> <span class="o">=</span> <span class="n">AdaGrad</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [8]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">LogisticRegressionSGD</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">AdaGrad</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Passes = 1, function = 2.724693e+04, change = 0.753612
+Passes = 2, function = 2.715153e+04, change = 0.081374
+Passes = 3, function = 2.712245e+04, change = 0.041782
+Passes = 4, function = 2.710405e+04, change = 0.028955
+Passes = 5, function = 2.709053e+04, change = 0.021070
+Passes = 6, function = 2.708448e+04, change = 0.018139
+Passes = 7, function = 2.708505e+04, change = 0.011846
+Passes = 8, function = 2.707827e+04, change = 0.010523
+Passes = 9, function = 2.707679e+04, change = 0.009694
+Passes = 10, function = 2.707562e+04, change = 0.006893
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Stochastic-Adaptive-Gradient-(SAG)">Stochastic Adaptive Gradient (SAG)<a class="anchor-link" href="#Stochastic-Adaptive-Gradient-(SAG)">Â¶</a></h3><p>Last but not least, we now discuss the <a href="https://arxiv.org/pdf/1309.2388v2.pdf">SAG algorithm</a>, a variant on batching in SGD that was published in 2015. The basic implementation of this method can be explained schematically as follows:</p>
+<ol>
+<li><p>Randomly select $i_t$ and compute the gradient $\nabla f_{i_t} (w_t)$.</p>
+</li>
+<li><p>Update the weights by taking a step towards the average of all the gradients computed so far</p>
+<p>$$ w_{t+1} = w_t - \eta_t \left( \frac{1}{n} \sum_{i=1}^n G_i^t \right), $$</p>
+<p>where $G_i^t$ keeps in memory all the gradients $\nabla f_{i_t} (w)$ computed before iteration $t$ (with replacement if training example $i_t$ is visited repeatedly).</p>
+</li>
+<li><p>Repeat.</p>
+</li>
+</ol>
+<p>Additionally, in contrast the the methods outlined before, SAG also leverages a property we have not used so far: Lipschitz continuity in the gradient of convex cost functions $f$</p>
+$$ \lVert \nabla f(x) - \nabla f(y) \lVert \; \leq \; L \lVert x - y \lVert. $$<p>By choosing the learning rate to be inversely proportional to the maximal Lipschitz constant over all training examples</p>
+$$ L = \frac{1}{4} \max_{1 \leq i \leq n} \left( \lVert x^i \lVert^2 \right) + \lambda, \;\;\; \eta_t = 1/L, $$<p>(here $x^i$ denotes a row of $X$), SAG achieves vastly superior convergence than all of the methods discussed above. In fact it is the only method of the ones outlined in this post that converges to the global minimum to 5 significant figures.</p>
+<h4 id="A-caveat-on-randomness">A caveat on randomness<a class="anchor-link" href="#A-caveat-on-randomness">Â¶</a></h4><p>The implementation of SAG below approaches the random updating of the gradients in two different ways, with surprising consequences.</p>
+<ol>
+<li><p>In <code>case = 1</code>, the index $i_t$ is sampled <em>randomly with replacement</em>, meaning that not all training examples are necessarily visited after an epoch has been completed. This choice of sampling leads to the best convergence properties.</p>
+</li>
+<li><p>In <code>case = 2</code>, the index $i_t$ is sampled <em>randomly without replacement</em>, such that all training examples are cycled through exactly once during each pass. It turns out that simply reshuffling the cycle after each pass, the method of choice for all the methods above, actually yields a <strong>much worse</strong> performance for SAG.</p>
+</li>
+</ol>
+<p>It can be verified that random sampling with replacement barely affects the other SGD algorithms, but it remains somewhat of a mystery to me why this choice in randomness affects convergence so drastically.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [9]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">SAG</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="c1"># Initialize</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">w_old</span> <span class="o">=</span> <span class="n">w</span>
+    <span class="n">Lambda</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="c1"># Randomly shuffle training data</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="c1"># shuffles arr directly</span>
+    
+    <span class="c1"># SAG parameters</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
+    <span class="n">dvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    
+    <span class="n">L</span> <span class="o">=</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">Lambda</span>
+    <span class="n">eta</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">L</span>
+    
+    <span class="c1"># strange property of random numbers with SAG</span>
+    <span class="k">if</span> <span class="n">case</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># much faster to generate all at once</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,))</span>
+    <span class="k">elif</span> <span class="n">case</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="c1"># shuffles arr directly</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"The variable 'case' is not specified correctly; abort."</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nEpochs</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># Compute grad for one random training example</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">)]</span>
+        <span class="c1"># i = np.random.randint(n)</span>
+        <span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LogReg</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">Lambda</span><span class="o">=</span><span class="n">Lambda</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># SAG algorithm</span>
+        <span class="n">dvec</span> <span class="o">=</span> <span class="n">dvec</span> <span class="o">-</span> <span class="n">G</span><span class="p">[[</span><span class="n">i</span><span class="p">],</span> <span class="p">:]</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">grad</span>
+        <span class="n">G</span><span class="p">[[</span><span class="n">i</span><span class="p">],</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">grad</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">-</span> <span class="n">eta</span><span class="o">*</span><span class="n">dvec</span><span class="o">/</span><span class="n">n</span>
+            
+        <span class="c1"># One epoch has passed: check for convergence</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w</span><span class="o">-</span><span class="n">w_old</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'Passes = </span><span class="si">%d</span><span class="s1">, function = </span><span class="si">%e</span><span class="s1">, change = </span><span class="si">%f</span><span class="s1">'</span> <span class="o">%</span><span class="p">((</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LogReg</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">Lambda</span><span class="o">=</span><span class="n">Lambda</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">change</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">change</span> <span class="o"><</span> <span class="bp">self</span><span class="o">.</span><span class="n">progTol</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">'Parameters changed by less than progress tolerance on pass'</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="n">w_old</span> <span class="o">=</span> <span class="n">w</span>
+            <span class="c1"># careful with random numbers</span>
+            <span class="k">if</span> <span class="n">case</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,))</span>
+            <span class="k">elif</span> <span class="n">case</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="c1"># shuffles arr directly</span>
+                
+<span class="n">LogisticRegressionSGD</span><span class="o">.</span><span class="n">SAG</span> <span class="o">=</span> <span class="n">SAG</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [10]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'-----------------------------------------------------------------'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  Case 1: completely random walk through training examples       '</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'-----------------------------------------------------------------'</span><span class="p">)</span>
+<span class="n">LogisticRegressionSGD</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">SAG</span><span class="p">(</span><span class="n">case</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'-----------------------------------------------------------------'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  Case 2: visiting every training example exactly once per pass  '</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'-----------------------------------------------------------------'</span><span class="p">)</span>
+<span class="n">LogisticRegressionSGD</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">SAG</span><span class="p">(</span><span class="n">case</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>-----------------------------------------------------------------
+  Case 1: completely random walk through training examples       
+-----------------------------------------------------------------
+Passes = 1, function = 2.827896e+04, change = 0.800740
+Passes = 2, function = 2.750555e+04, change = 0.333843
+Passes = 3, function = 2.719657e+04, change = 0.231760
+Passes = 4, function = 2.715866e+04, change = 0.142823
+Passes = 5, function = 2.710138e+04, change = 0.073561
+Passes = 6, function = 2.708099e+04, change = 0.047769
+Passes = 7, function = 2.707263e+04, change = 0.039457
+Passes = 8, function = 2.706958e+04, change = 0.015866
+Passes = 9, function = 2.706824e+04, change = 0.011306
+Passes = 10, function = 2.706798e+04, change = 0.006513
+-----------------------------------------------------------------
+  Case 2: visiting every training example exactly once per pass  
+-----------------------------------------------------------------
+Passes = 1, function = 2.997070e+04, change = 1.087841
+Passes = 2, function = 2.791141e+04, change = 0.457067
+Passes = 3, function = 2.798343e+04, change = 0.471225
+Passes = 4, function = 2.926349e+04, change = 0.359653
+Passes = 5, function = 2.934598e+04, change = 0.418543
+Passes = 6, function = 2.826330e+04, change = 0.320090
+Passes = 7, function = 2.722061e+04, change = 0.136731
+Passes = 8, function = 2.847064e+04, change = 0.192135
+Passes = 9, function = 3.097148e+04, change = 0.350279
+Passes = 10, function = 3.087167e+04, change = 0.466785
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Whereas regular stochastic gradient descent has been known for a long time, some of the variants discussed in this post are quite recent: AdaGrad and SAG were first described in peer-reviewed publications in 2011 and 2015 respectively. It is interesting to note that the latter is already one of the main solvers available for Logistic and Ridge regressions in <a href="http://scikit-learn.org/stable/index.html">scikit-learn</a> because of its efficiency with large datasets. The rapid rise of online learning and artificial neural networks, where stochastic optimization shines brightest, are sure to stimulate research for even better methods in the near future.</p>
+</div>
+</div>
+</div>
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: 'center'," +
+        "    displayIndent: '0em'," +
+        "    showMathMenu: true," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['$','$'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+        "    } " +
+        "}); ";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="https://inspirehep.net/search?ln=en&as=1&m1=a&p1=vincart-emard&f1=author&op1=a&m2=a&p2=&f2=&op2=a&m3=a&p3=&f3=&action_search=Search&dt=&d1d=&d1m=&d1y=&d2d=&d2m=&d2y=&sf=&so=a&rm=&rg=25&of=hb&sf=earliestdate&so=d">My Publications</a></li>
+                            <li><a href="https://arxiv.org">arXiv</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="https://www.economist.com">The Economist</a></li>
+                            <li><a href="https://www.scientificamerican.com">Scientific American</a></li>
+                            <li><a href="https://futurism.com">Futurism</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="avincartemard.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="https://www.linkedin.com/in/alexandre-vincart-emard-9a7a4497/">LinkedIn</a></li>
+                            <li><a href="https://github.com/avincartemard">GitHub</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <p> </p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
