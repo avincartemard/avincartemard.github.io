@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Beer Crawl</title>
+        <link rel="stylesheet" href="https://avincartemard.github.io/theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="https://avincartemard.github.io/">alexandre<span class="last-name" style="color:#008db8">vincart-emard</span></a></h1>
+                <nav><ul>
+                    <li><a href="/pages/about.html">About</a></li>
+                    <li><a href="/pages/curriculum-vitae.html">Curriculum Vitae</a></li>
+                    <li><a href="/tags.html">Tags</a></li>
+                    <li><a href="/archives.html">Archives</a></li>
+                </ul>
+                </nav>
+<div id="submenu">
+                    <ul>
+                            <li><a href="https://avincartemard.github.io/category/blog.html">Blog</a></li>
+                            <li><a href="https://avincartemard.github.io/category/machine-learning.html">Machine Learning</a></li>
+                            <li class="active"><a href="https://avincartemard.github.io/category/python.html">Python</a></li>
+                    </ul>
+                <div>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://avincartemard.github.io/blog/2017/07/27/beer-crawl/" rel="bookmark"
+           title="Permalink to Beer Crawl">Beer Crawl</a></h1>
+<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="avincartemard">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <span>July 27, 2017</span>
+<span>| tags: <a href="https://avincartemard.github.io/tag/scraping.html">Scraping</a><a href="https://avincartemard.github.io/tag/python.html">Python</a><a href="https://avincartemard.github.io/tag/beautifulsoup.html">BeautifulSoup</a></span>
+</footer><!-- /.post-info -->      <p>Many websites like <a href="https://www.kaggle.com">Kaggle</a> and the <a href="http://archive.ics.uci.edu/ml/index.php">UC Irvine Machine Learning Repository</a> offer a vast selection of clean data sets on which experienced and aspiring data scientists alike can experiment. However the web is full of interesting data that has not been organized in neat tables ready for extraction. For instance one can think of plane ticket prices, real estate listings, stock prices, product reviews, social media feeds, etc. The list goes on! </p>
+<p>In such cases <strong>web scraping</strong> becomes a very handy skill to have as a data scientist. I've always thought that the idea of creating a script to crawl webpages in order to extract information sounded fun, but I didn't know how to approach this problem until I came across <a href="http://pythonscraping.com">this book</a>, which pedagogically outlines how to use the Python library <code>BeautifulSoup</code> to pull data out of HTML and XML files. I won't get into the specifics of my implementation in here, but there are many free tutorials available online that can help you get started. </p>
+<p>In order to start scraping, I first had to find an interesting website with which to get my hands dirty. I eventually stumbled upon <a href="http://beermebc.com">Beer Me BC</a>, a website dedicated to reviewing craft beers in British Columbia. Bingo! Not only were most review pages structured the same way, the quantity of information I could extract could potentially lead to a nice analysis of what makes a great craft beer in BC. Challenge accepted!</p>
+<h3>The Golden Rules of Web Scraping</h3>
+<p>There are a few things to be aware of before scraping a website:</p>
+<ol>
+<li>
+<p>Be polite. A computer can send thousands of web requests per second, which has the potential to harm a website by overloading its servers. It is easy to implement a time delay before each request so that a website's performance doesn't degrade for other users.  </p>
+</li>
+<li>
+<p>Respect a website's terms and conditions about scraping, which are usually found in the website's <code>robots.txt</code> file (typically located at www.website.com/robots.txt). For instance some websites may ask that scraping be done at night only in order to keep daytime traffic at reasonable levels. </p>
+</li>
+<li>
+<p>Scrapers break. There is no guarantee that the layout your web scraper is based upon will stay the same, so keep things as general as possible and be prepared to rewrite your code if changes occur. </p>
+</li>
+<li>
+<p>There's no avoiding inconsistencies. Most webpages are well-structured, but do not expect every page to be exactly the same. Manual clean-up will very likely be required after acquiring the data. </p>
+</li>
+</ol>
+<h3>Beer Crawl</h3>
+<p>With these rules in mind I wrote two scraping functions. The first one, <code>getBeerLinks</code>, is a crawler that extracts individual beer review URLs from a list.</p>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="k">def</span> <span class="nf">getBeerLinks</span><span class="p">(</span><span class="n">pageUrl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Links to beer descriptions are contained in a list of pages &quot;&quot;&quot;</span>
+
+    <span class="c1"># create session with custom HTTP header</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/603.2.5 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.5&quot;</span><span class="p">,</span> 
+               <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;</span><span class="p">}</span>
+    <span class="n">beerLinks</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># access url; raise exception is something goes wrong</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pageUrl</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Error encountered when accessing url; return empty &#39;beerLinks&#39; list.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">beerLinks</span>
+
+    <span class="c1"># beer urls are all under the h3 header of the blog-list style-1 division </span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bsObj</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
+        <span class="n">beers</span> <span class="o">=</span> <span class="n">bsObj</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;div&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;blog-list style-1&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s2">&quot;h3&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Attribute error encountered in bsObj; return empty &#39;beerLinks&#39; list.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">beerLinks</span>
+
+    <span class="c1"># extract individual beer urls</span>
+    <span class="k">for</span> <span class="n">beer</span> <span class="ow">in</span> <span class="n">beers</span><span class="p">:</span>
+        <span class="n">beerLinks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">beer</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">beerLinks</span>
+</pre></div>
+
+
+<p>The <code>requests</code> library is useful to create a web session that mimics a human user so that the website administrators don't flag our script as being a bot. This is achieved by specifying the user-agent options in our session's headers to be the same as the ones from a typical web browser. We then use <code>BeautifulSoup</code> to parse the HTML text extracted in <code>req</code> in order to extract the information we need, which in our case are the URLs contained in the "href" tag of all "h3" headers on the page.</p>
+<p>The second function, called <code>getBeerInfo</code>, takes these URLs as an input and returns a dictionary that contains information such as the beer's name, brewery, ratings, alcohol percentage, review text, and so on. Note that this function is very specific to the particular layout of the review pages.</p>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="k">def</span> <span class="nf">getBeerInfo</span><span class="p">(</span><span class="n">pageUrl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Retrieve beer information and store in a Python dictionary &quot;&quot;&quot;</span>
+
+    <span class="c1"># create session with custom HTTP header</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/603.2.5 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.5&quot;</span><span class="p">,</span> 
+               <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;</span><span class="p">}</span>
+
+    <span class="n">beerInfo</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># access url; raise exception is something goes wrong</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pageUrl</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Error encountered when accessing url; return.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">bsObj</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Name and Brewery</span>
+    <span class="n">tempName</span> <span class="o">=</span> <span class="n">bsObj</span><span class="o">.</span><span class="n">h1</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">tempName</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;–&#39;</span><span class="p">)</span>
+        <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tempName</span><span class="p">[</span><span class="n">I</span><span class="o">+</span><span class="mi">2</span><span class="p">:]</span>
+        <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Brewery&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tempName</span><span class="p">[:</span><span class="n">I</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="c1"># if - not in title, may have to parse information manually later</span>
+        <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tempName</span>
+
+    <span class="c1"># Ratings (does not include total)</span>
+    <span class="k">for</span> <span class="n">rating</span> <span class="ow">in</span> <span class="n">bsObj</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;rate-item&quot;</span><span class="p">}):</span>
+        <span class="n">tempRating</span> <span class="o">=</span> <span class="n">rating</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s2">&quot;strong&quot;</span><span class="p">)</span>    <span class="c1"># rating and categories within &lt;strong&gt; tag</span>
+        <span class="n">beerInfo</span><span class="p">[</span><span class="n">tempRating</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">()]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">tempRating</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+    <span class="c1"># Now treat inconsistencies in ratings systems</span>
+    <span class="k">if</span> <span class="s1">&#39;Flavour&#39;</span> <span class="ow">in</span> <span class="n">beerInfo</span><span class="p">:</span>
+        <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Taste&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Flavour&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">&#39;Mouthfeel&#39;</span> <span class="ow">in</span> <span class="n">beerInfo</span><span class="p">:</span>
+        <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Palate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Mouthfeel&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Total score is left empty because some beers are rated with &lt;4 criteria</span>
+    <span class="c1"># Pandas can handle NaN easily in postprocessing</span>
+
+    <span class="c1"># Categories found in second panel...</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">bsObj</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;panel&quot;</span><span class="p">})[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Type (located in possibly many &lt;a&gt; tags, so we need to concatenate them)</span>
+    <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">BeautifulSoup</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span> <span class="k">for</span> <span class="nb">type</span> <span class="ow">in</span> <span class="n">panel</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s2">&quot;li&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)])</span>
+
+    <span class="c1"># Pros, Cons, and Conclusion</span>
+    <span class="n">panel_list</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s2">&quot;li&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;graytext&quot;</span><span class="p">})</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Pros&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">panel_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+        <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Cons&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">panel_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+        <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Conclusion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">panel_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+        <span class="c1"># these categories do not exist</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># Alcohol, Size, and IBU (if available); will need post-processing</span>
+    <span class="c1"># If value not available, will show up as NaN in .csv file since not in dictionary</span>
+    <span class="n">paragraph_row</span> <span class="o">=</span> <span class="n">bsObj</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;paragraph-row&quot;</span><span class="p">})</span>
+
+    <span class="n">pASI</span> <span class="o">=</span> <span class="n">paragraph_row</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="c1"># so we can loop through &lt;p&gt; tags</span>
+
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pASI</span><span class="p">:</span>
+        <span class="n">paragraph</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;Alcohol&#39;</span> <span class="ow">in</span> <span class="n">paragraph</span><span class="p">:</span>
+            <span class="n">I</span> <span class="o">=</span> <span class="n">paragraph</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;Alcohol&#39;</span><span class="p">)</span>
+            <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Alcohol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paragraph</span><span class="p">[</span><span class="n">I</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="s1">&#39;Size&#39;</span> <span class="ow">in</span> <span class="n">paragraph</span><span class="p">:</span>
+            <span class="n">I</span> <span class="o">=</span> <span class="n">paragraph</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;Size&#39;</span><span class="p">)</span>
+            <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;\D&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">paragraph</span><span class="p">[</span><span class="n">I</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="s1">&#39;Ibu&#39;</span> <span class="ow">in</span> <span class="n">paragraph</span><span class="p">:</span>
+            <span class="n">I</span> <span class="o">=</span> <span class="n">paragraph</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;Ibu&#39;</span><span class="p">)</span>
+            <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;IBU&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paragraph</span><span class="p">[</span><span class="n">I</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+    <span class="c1"># Date reviewed</span>
+    <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Date Reviewed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bsObj</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;dtreviewed&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">span</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Reviewer (take last element of the title attribute &quot;Posts by *reviewer*&quot;)</span>
+    <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Reviewer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bsObj</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;reviewer&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+    <span class="c1"># Categories and Tags</span>
+    <span class="n">articleFoot</span> <span class="o">=</span> <span class="n">bsObj</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;article-foot&quot;</span><span class="p">})</span>
+
+    <span class="n">categoryLinks</span> <span class="o">=</span> <span class="n">articleFoot</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;left&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+    <span class="n">categoryList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">categoryLinks</span><span class="p">:</span>
+        <span class="n">categoryList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">category</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+    <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Categories&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">categoryList</span><span class="p">)</span>
+
+    <span class="n">tagLinks</span> <span class="o">=</span> <span class="n">articleFoot</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;right&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+    <span class="n">tagList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tagLinks</span><span class="p">:</span>
+        <span class="n">tagList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+    <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Tags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tagList</span><span class="p">)</span>
+
+    <span class="c1"># Review text and URL</span>
+    <span class="n">overview_header</span> <span class="o">=</span> <span class="n">bsObj</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;paragraph-row&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">findNext</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">findNext</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">)</span>
+    <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;Review Text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">overview_header</span><span class="o">.</span><span class="n">findNext</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+    <span class="n">beerInfo</span><span class="p">[</span><span class="s1">&#39;URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pageUrl</span>    <span class="c1"># for identification of duplicates</span>
+
+    <span class="k">return</span> <span class="n">beerInfo</span>
+</pre></div>
+
+
+<p>Notice the use of the many <code>if</code> and <code>try ... except</code> statements in both functions above. These statements are actually critical to the proper functioning of our web scraper. Indeed it turns out that even if most beer reviews follow a similar HTML template, exceptions are bound to happen: the 'Taste' rating may be called 'Flavour' in a handful of reviews; the 'Pros' and 'Cons' categories might be absent; the URL may not be accessible for some reason; etc. By giving the scraper an alternative (e.g. if 'Pros' doesn't exist, then keep on going), we allow it to retrieve as much information as it can instead of stopping it in its tracks whenever an exception occurs. </p>
+<p>However no matter how many precautions one takes additional measures will need to be implemented. For instance in this case many strings contained in the <code>beerInfo</code> dictionary resulted in a <code>UnicodeDecodeError</code> when saved to a .csv file. The culprit was often a rogue slanted apostrophe in the text that the ascii codec could not decode. I thus had to post-process all strings to remove unicode characters using the regular expression library <code>re</code></p>
+<div class="codehilite"><pre><span></span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">beerInfo</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">beerInfo</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">beerInfo</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[^\x00-\x7f]&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">beerInfo</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+</pre></div>
+
+
+<p>Getting a scraper to work properly requires patience and quite a bit of trial and error, but the rewards are usually worth it. It is also a fantastic addition to a data scientist's skill set. Note that there are additional tools in Python that one may use to improve the scope of their web scraping practices. One of these is Scrapy, a powerful crawling framework that handles downloading, cleaning, and saving data, as opposed to simply parsing HTML files like BeautifulSoup. Another useful library is Selenium, originally developed for web testing, which finds its usefulness in the fact that it can handle JavaScript execution and redirects so that one can extract information that appears dynamically in a browser, e.g. when hovering over an element.</p>
+<p>For the interested the raw beer dataset obtained from the above web crawler is available <a href="https://avincartemard.github.io/datasets/beer_info.csv">here</a>, and I will soon post an analysis of the data contained within.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="https://inspirehep.net/search?ln=en&as=1&m1=a&p1=vincart-emard&f1=author&op1=a&m2=a&p2=&f2=&op2=a&m3=a&p3=&f3=&action_search=Search&dt=&d1d=&d1m=&d1y=&d2d=&d2m=&d2y=&sf=&so=a&rm=&rg=25&of=hb&sf=earliestdate&so=d">My Publications</a></li>
+                            <li><a href="https://arxiv.org">arXiv</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="https://www.economist.com">The Economist</a></li>
+                            <li><a href="https://www.scientificamerican.com">Scientific American</a></li>
+                            <li><a href="https://futurism.com">Futurism</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://www.linkedin.com/in/alexandre-vincart-emard-9a7a4497/">LinkedIn</a></li>
+                            <li><a href="https://github.com/avincartemard">GitHub</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <p> </p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
