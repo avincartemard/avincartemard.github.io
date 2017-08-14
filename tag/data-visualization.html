@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>My Blog - Big Data</title>
+        <title>My Blog - Data Visualization</title>
         <link rel="stylesheet" href="https://avincartemard.github.io/theme/css/main.css" />
 
         <!--[if IE]>
@@ -32,21 +32,26 @@
     <ol id="posts-list" class="hfeed" start="3">
 	<li><article class="hentry">
 		<header>
-                    <h1><a href="https://avincartemard.github.io/blog/2017/07/25/stochastic-optimization/" rel="bookmark"
-                           title="Permalink to Stochastic Optimization">Stochastic Optimization</a></h1>
+                    <h1><a href="https://avincartemard.github.io/blog/2017/08/14/beer-crawl-preliminary-analysis/" rel="bookmark"
+                           title="Permalink to Beer Crawl - Preliminary Analysis">Beer Crawl - Preliminary Analysis</a></h1>
                 </header>
 		<div class="entry-content">
 <footer class="post-info">
-        <span>July 25, 2017</span>
-<span>| tags: <a href="https://avincartemard.github.io/tag/optimization.html">Optimization</a><a href="https://avincartemard.github.io/tag/online-learning.html">Online Learning</a><a href="https://avincartemard.github.io/tag/big-data.html">Big Data</a><a href="https://avincartemard.github.io/tag/python.html">Python</a></span>
+        <span>August 14, 2017</span>
+<span>| tags: <a href="https://avincartemard.github.io/tag/data-visualization.html">Data Visualization</a><a href="https://avincartemard.github.io/tag/python.html">Python</a></span>
 </footer><!-- /.post-info -->                
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In a world where data can be collected continuously and storage costs are cheap, issues related to the growing size of interesting datasets can pose a problem unless we have the right tools for the task. Indeed, in the event where we have <em>streaming data</em> it might be impossible to wait until the "end" before fitting our model since it may never come. Alternatively it might be problematic to even store all of the data, scattered across many different servers, in memory before using it. Instead it would be preferable to do an update each time some new data (or a small batch of it) arrives. Similarly we might find ourselves in an offline situation where the number of training examples is <em>very large</em> and traditional approaches, such as gradient descent, start to become too slow for our needs.</p>
-<p><strong>Stochastic gradient descent</strong> (SGD) offers an easy solution to all of these problems.</p>
-                <a class="readmore" href="https://avincartemard.github.io/blog/2017/07/25/stochastic-optimization/">Read more →</a>
+<p>In my previous post <a href="https://avincartemard.github.io/blog/2017/07/27/beer-crawl/">Beer Crawl</a>, I deployed a web crawler to extract information describing over 300 craft beers in British Columbia. However after further investigation I realized that the dataset I had collected unfortunately had a few drawbacks. Perhaps the main one is that it describes the <em>best</em> beers in BC, and as a result their descriptions, ratings and reviews are more or less homogeneous, as this short visualization exercice will soon show.</p>
+<h3 id="Initialization-and-data-pre-processing">Initialization and data pre-processing<a class="anchor-link" href="#Initialization-and-data-pre-processing">Â¶</a></h3><p>Let's first load the standard libraries that we will use throughout and then proceed to clean up the raw data:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+                <a class="readmore" href="https://avincartemard.github.io/blog/2017/08/14/beer-crawl-preliminary-analysis/">Read more →</a>
                 </div><!-- /.entry-content -->
             </article></li>
     </ol><!-- /#posts-list -->
