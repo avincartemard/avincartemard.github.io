@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>My Blog - Big Data</title>
+        <title>My Blog - CNN</title>
         <link rel="stylesheet" href="https://avincartemard.github.io/theme/css/main.css" />
 
         <!--[if IE]>
@@ -32,21 +32,22 @@
     <ol id="posts-list" class="hfeed" start="10">
 	<li><article class="hentry">
 		<header>
-                    <h1><a href="https://avincartemard.github.io/blog/2017/07/25/stochastic-optimization/" rel="bookmark"
-                           title="Permalink to Stochastic Optimization">Stochastic Optimization</a></h1>
+                    <h1><a href="https://avincartemard.github.io/blog/2017/09/08/dogs-vs-cats-classification-with-vgg16/" rel="bookmark"
+                           title="Permalink to Dogs vs. Cats - Classification with VGG16">Dogs vs. Cats - Classification with VGG16</a></h1>
                 </header>
 		<div class="entry-content">
 <footer class="post-info">
-        <span>July 25, 2017</span>
-<span>| tags: <a href="https://avincartemard.github.io/tag/optimization.html">Optimization</a><a href="https://avincartemard.github.io/tag/online-learning.html">Online Learning</a><a href="https://avincartemard.github.io/tag/big-data.html">Big Data</a><a href="https://avincartemard.github.io/tag/python.html">Python</a></span>
+        <span>September 08, 2017</span>
+<span>| tags: <a href="https://avincartemard.github.io/tag/deep-learning.html">Deep Learning</a><a href="https://avincartemard.github.io/tag/keras.html">Keras</a><a href="https://avincartemard.github.io/tag/cnn.html">CNN</a></span>
 </footer><!-- /.post-info -->                
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In a world where data can be collected continuously and storage costs are cheap, issues related to the growing size of interesting datasets can pose a problem unless we have the right tools for the task. Indeed, in the event where we have <em>streaming data</em> it might be impossible to wait until the "end" before fitting our model since it may never come. Alternatively it might be problematic to even store all of the data, scattered across many different servers, in memory before using it. Instead it would be preferable to do an update each time some new data (or a small batch of it) arrives. Similarly we might find ourselves in an offline situation where the number of training examples is <em>very large</em> and traditional approaches, such as gradient descent, start to become too slow for our needs.</p>
-<p><strong>Stochastic gradient descent</strong> (SGD) offers an easy solution to all of these problems.</p>
-                <a class="readmore" href="https://avincartemard.github.io/blog/2017/07/25/stochastic-optimization/">Read more →</a>
+<h2 id="Dogs-vs.-Cats:-Classification-with-VGG16">Dogs vs. Cats: Classification with VGG16<a class="anchor-link" href="#Dogs-vs.-Cats:-Classification-with-VGG16">Â¶</a></h2><p>Convolutional neural networks (CNNs) are the state of the art when it comes to computer vision. As such we will build a CNN model to distinguish images of cats from those of dogs by using the <a href="https://www.kaggle.com/c/dogs-vs-cats-redux-kernels-edition/rules">Dogs vs. Cats Redux: Kernels Edition</a> dataset.</p>
+<p>Pre-trained deep CNNs typically generalize easily to different but similar datasets with the help of transfer learning. The reason is simple: the filters present in the earlier convolutional layers of a CNN usually capture low-level features such as straight lines, whereas higher-level filters recognizing complex objects such as faces are activated deeper in the network. As such it is possible to directly use the training weights associated with shape recognition and retrain only the deepest layers of the network - a procedure called <strong>finetuning</strong> or <strong>transfer learning</strong> - to perform classification tasks on different types of images.</p>
+<p>For this competition we follow the process described in the deep learning course <a href="fast.ai">fast.ai</a>
+                <a class="readmore" href="https://avincartemard.github.io/blog/2017/09/08/dogs-vs-cats-classification-with-vgg16/">Read more →</a>
                 </div><!-- /.entry-content -->
             </article></li>
     </ol><!-- /#posts-list -->
