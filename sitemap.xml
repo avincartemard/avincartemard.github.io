@@ -5,42 +5,42 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://avincartemard.github.io/index.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/archives.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tags.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/categories.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/pages/about.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/pages/curriculum-vitae.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -96,140 +96,140 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://avincartemard.github.io/category/blog.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/category/machine-learning.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/category/python.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/pelican.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/online-learning.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/classification.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/keras.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/skewed-classes.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/scraping.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/artificial-intelligence.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/scikit-learn.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/beautifulsoup.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/big-data.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/python.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/deep-learning.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/data-visualization.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/optimization.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/cnn.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/tag/technology.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://avincartemard.github.io/author/alexandre-vincart-emard.html</loc>
-<lastmod>2017-09-21T17:56:38-00:00</lastmod>
+<lastmod>2017-10-11T17:32:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
